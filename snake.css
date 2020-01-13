@@ -22,3 +22,7 @@ h1 {
 .ghost {
   background-color: gray;
 }
+
+.food {
+  background-color: rgb(93, 93, 253);
+}
