@@ -73,8 +73,8 @@ const updateFood = function(food) {
 
 const updateAndDrawGame = function(game) {
   game.moveSnakes();
-  const { food, snake, score, isGameOver, ghostSnake } = game.getStatus();
-  if (isGameOver) {
+  const { food, snake, score, ghostSnake } = game.getStatus();
+  if (game.isOver()) {
     clearInterval(interval);
     return drawGameOverScreen();
   }

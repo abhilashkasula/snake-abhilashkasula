@@ -16,14 +16,24 @@ class Game {
     this.ghostSnake.turnLeft();
   }
 
+  isHitToGhost() {
+    const snakeLocation = this.snake.location;
+    return snakeLocation.some(part => isPointOnLine(this.ghostSnake.location, part));
+  }
+
+  isOver() {
+    const isSnakeCrossedGrid = this.snake.hasCrossedBoundaries(this.gridSize);
+    const isEatenItself = this.snake.hasEatenItself()
+    return isSnakeCrossedGrid || isEatenItself || this.isHitToGhost();
+  }
+  
   update() {
-    this.isGameOver = this.snake.hasCrossedBoundaries(this.gridSize) || this.snake.hasEatenItself();
-    if (this.snake.didEatFood(this.food.position)) {
+    if (this.snake.isHeadAt(this.food.position)) {
       this.food.generateNew();
       this.snake.grow();
       this.scoreCard.updateDefault();
     }
-    if(this.ghostSnake.didEatFood(this.food.position)) {
+    if(this.ghostSnake.isHeadAt(this.food.position)) {
       this.food.generateNew();
       this.ghostSnake.grow();
     }
@@ -54,8 +64,7 @@ class Game {
       snake,
       ghostSnake,
       food,
-      score: this.scoreCard.points,
-      isGameOver: this.isGameOver
+      score: this.scoreCard.points
     };
   }
 }

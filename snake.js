@@ -43,8 +43,9 @@ class Snake {
     return isPointOnLine(body, head);
   }
 
-  didEatFood(food) {
-    return isPointOnLine(this.positions, food);
+  isHeadAt(point) {
+    const head = this.positions[this.positions.length - 1];
+    return head.every((coordinate, index) => coordinate === point[index]);
   }
 
   move() {
