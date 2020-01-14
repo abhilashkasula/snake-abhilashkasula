@@ -1,15 +1,10 @@
-const isFoodAteBySnake = function(snakeLocation, foodLocation) {
-  return snakeLocation.some(part =>
-    part.every((coordinate, index) => coordinate === foodLocation[index])
-  );
-};
-
 class Game {
-  constructor(snake, ghostSnake, food, scoreCard) {
+  constructor(snake, ghostSnake, food, gridSize) {
     this.snake = snake;
     this.ghostSnake = ghostSnake;
     this.food = food;
-    this.scoreCard = scoreCard;
+    this.scoreCard = new ScoreCard();
+    this.gridSize = gridSize;
     this.isGameOver = false;
   }
 
@@ -22,23 +17,22 @@ class Game {
   }
 
   update() {
-    this.food.generateNew();
-    this.snake.grow();
-    this.scoreCard.updateDefault();
-  }
-
-  moveSnake() {
-    this.snake.move();
-    const snakeLocation = this.snake.location;
-    const foodLocation = this.food.position;
-    this.isGameOver = this.snake.hasCrossedBoundaries();
-    if (isFoodAteBySnake(snakeLocation, foodLocation)) {
-      this.update();
+    this.isGameOver = this.snake.hasCrossedBoundaries(this.gridSize) || this.snake.hasEatenItself();
+    if (this.snake.didEatFood(this.food.position)) {
+      this.food.generateNew();
+      this.snake.grow();
+      this.scoreCard.updateDefault();
+    }
+    if(this.ghostSnake.didEatFood(this.food.position)) {
+      this.food.generateNew();
+      this.ghostSnake.grow();
     }
   }
 
-  moveGhostSnake() {
+  moveSnakes() {
+    this.snake.move();
     this.ghostSnake.move();
+    this.update()
   }
 
   getStatus() {

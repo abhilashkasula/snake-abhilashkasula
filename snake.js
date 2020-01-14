@@ -1,4 +1,4 @@
-const isHeadOutOfLine = function([headX, headY]) {
+const isHeadOutOfGrid = function([headX, headY], NUM_OF_COLS, NUM_OF_ROWS) {
   const isHeadXOutOfCols = headX < 0 || headX >= NUM_OF_COLS;
   const isHeadYOutOfRows = headY < 0 || headY >= NUM_OF_ROWS;
   return isHeadXOutOfCols || isHeadYOutOfRows;
@@ -32,9 +32,19 @@ class Snake {
     this.positions.unshift(this.previousTail);
   }
 
-  hasCrossedBoundaries() {
+  hasCrossedBoundaries({NUM_OF_COLS, NUM_OF_ROWS}) {
     const head = this.positions[this.positions.length - 1];
-    return isHeadOutOfLine(head);
+    return isHeadOutOfGrid(head, NUM_OF_COLS, NUM_OF_ROWS);
+  }
+
+  hasEatenItself() {
+    const head = this.positions[this.positions.length - 1];
+    const body = this.positions.slice(0, -1);
+    return isPointOnLine(body, head);
+  }
+
+  didEatFood(food) {
+    return isPointOnLine(this.positions, food);
   }
 
   move() {

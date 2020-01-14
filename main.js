@@ -11,6 +11,13 @@ const getScoreBoard = () => document.getElementById(SCORE_BOARD_ID);
 const getCell = (colId, rowId) =>
   document.getElementById(getCellId(colId, rowId));
 
+const isPointOnLine = function(snakeLocation, foodLocation) {
+  return snakeLocation.some(part =>
+    part.every((coordinate, index) => coordinate === foodLocation[index])
+  );
+};
+  
+
 const eraseGrid = function() {
   const grid = getGrid();
   document.body.removeChild(grid);
@@ -65,8 +72,7 @@ const updateFood = function(food) {
 };
 
 const updateAndDrawGame = function(game) {
-  game.moveSnake();
-  game.moveGhostSnake();
+  game.moveSnakes();
   const { food, snake, score, isGameOver, ghostSnake } = game.getStatus();
   if (isGameOver) {
     clearInterval(interval);
@@ -136,15 +142,15 @@ const initGhostSnake = () => {
     [41, 30],
     [42, 30]
   ];
-  return new Snake(ghostSnakePosition, new Direction(SOUTH), "ghost");
+  return new Snake(ghostSnakePosition, new Direction(EAST), "ghost");
 };
 
 const main = function() {
+  const gridSize = {NUM_OF_COLS, NUM_OF_ROWS};
   const snake = initSnake();
   const ghostSnake = initGhostSnake();
-  const food = new Food(5, 5, [0, 0]);
-  const scoreCard = new ScoreCard(0);
-  const game = new Game(snake, ghostSnake, food, scoreCard);
+  const food = new Food(44, 30, [0, 0]);
+  const game = new Game(snake, ghostSnake, food, gridSize);
   setup(game);
   interval = setInterval(updateAndDrawGame, 200, game);
   setInterval(randomlyTurnSnake, 200, game);

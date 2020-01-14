@@ -1,6 +1,6 @@
 class ScoreCard {
-  constructor(score) {
-    this.score = score;
+  constructor() {
+    this.score = 0;
   }
 
   get points() {
